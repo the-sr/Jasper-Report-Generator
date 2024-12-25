@@ -33,6 +33,21 @@ public class MainController {
             .telNumber(null)
             .tranactionNumber("202412240"+i)
             .script("Script Bank Limited [SBL]")
+            .quantity(100.0+i)
+            .rate(3000.0+i)
+            .amount((100.0+i)*(3000.0+i))
+            .sebCommission(51.56)
+            .commissionRate(0.33)
+            .commissionAmount(1000.0)
+            .capitalGainTax(0.00+i)
+            .effectiveRate(3000.0)
+            .total(10000.0)
+            .closeoutQuantity(0.00)
+            .closeoutAmount(0.00)
+            .DpFee(100.0)
+            .transactionDate("2024-12-24")
+            .clearnaceDate("2024-12-24")
+            .signature("Signature")
             .build();
 
             dataRepo.save(data);

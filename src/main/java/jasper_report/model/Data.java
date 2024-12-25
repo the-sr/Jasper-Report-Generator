@@ -20,6 +20,7 @@ public class Data {
 
     @Id
     private Long id;
+//-------------------------------------------
     private String companyName;
     private String address;
     private String contact;
@@ -30,9 +31,11 @@ public class Data {
     private String billDateBS;
     private String fiscalYear;
     private String billNumber;
+//----------------------------------------------
     private String clientName;
     private String mobile;
     private String telNumber;
+//----------------------------------------------
     private String tranactionNumber;
     private String script;
     private Double quantity;
@@ -46,5 +49,10 @@ public class Data {
     private Double total;
     private Double closeoutQuantity;
     private Double closeoutAmount;
+//------------------------------------------------
+    private Double DpFee;
+    private String transactionDate;
+    private String clearnaceDate;
+    private String signature;
     
 }
