@@ -112,10 +112,10 @@ public class ReportService {
                 text.setText(f + ":");
                 text.setX(x.get());
                 text.setY(y.get());
-                text.setWidth(50);
+                text.setWidth(80);
                 text.setHeight(20);
                 band.addElement(text);
-                x.getAndAdd(50);
+                x.getAndAdd(80);
             }
             if (fieldCounter.get() == 0) {
                 JRDesignExpression expression = new JRDesignExpression();
@@ -153,8 +153,7 @@ public class ReportService {
 
         band.addElement(designLine(x.get(), y.get(), 1040, 0));
 
-        x.set(0);
-        y.set(0);
+        y.set(y.getAndAdd(10));
 
         Map<String, Object> clientFieldsMap = dto.getClientFields();
         Set<String> fieldSet = clientFieldsMap.keySet();
@@ -178,7 +177,13 @@ public class ReportService {
             textField.setWidth(80);
             textField.setHeight(20);
             band.addElement(textField);
+            x.getAndAdd(80);
         });
+
+        JRDesignStaticText text=staticText(0, 180  , 1040, 20);
+        text.setText("As per your order, we have Sold these udernoted stocks");
+        text.setHorizontalTextAlign(HorizontalTextAlignEnum.LEFT);
+        band.addElement(text);
 
         return band;
     }
