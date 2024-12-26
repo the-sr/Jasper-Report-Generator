@@ -1,6 +1,6 @@
 package jasper_report.dto;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import lombok.Getter;
@@ -8,44 +8,52 @@ import lombok.Getter;
 @Getter
 public class XmlDto {
     private String query;
-    private Map<String,Object> fields=new HashMap<>();
-    private Map<String,String> expression=new HashMap<>();
+    private Map<String, Object> pageHeaderFields = new LinkedHashMap<>();
+    private Map<String, Object> clientFields = new LinkedHashMap<>();
+    private Map<String, Object> detailsFields = new LinkedHashMap<>();
+    private Map<String, Object> summaryFields = new LinkedHashMap<>();
 
-    public XmlDto(){
+    public XmlDto() {
         this.query = "select * from data where id=1";
 
-        fields.put("companyName","");
-        fields.put("address","");
-        fields.put("contact","");
-        fields.put("email","");
-        fields.put("brokerNumber",0);
-        fields.put("pan","");
-        fields.put("billDateAD","");
-        fields.put("billDateBS","");
-        fields.put("fiscalYear","");
-        fields.put("billNumber","");
-        fields.put("clientName","");
-        fields.put("mobile","");
-        fields.put("telNumber","");
-        fields.put("tranactionNumber","");
-        fields.put("script","");
-        fields.put("quantity",0.0);
-        fields.put("rate",0.0);
-        fields.put("amount",0.0);
-        fields.put("sebCommission",0.0);
-        fields.put("commissionRate",0.0);
-        fields.put("commissionAmount",0.0);
-        fields.put("capitalGainTax",0.0);
-        fields.put("effectiveRate",0.0);
-        fields.put("total",0.0);
-        fields.put("closeoutQuantity",0);
-        fields.put("closeoutAmount",0.0);
-        fields.put("DpFee",0.0);
-        fields.put("transactionDate","");
-        fields.put("clearnaceDate","");
-        fields.put("signature","");
+        pageHeaderFields.put("company_name", "");
+        pageHeaderFields.put("bill_datead", "");
+
+        pageHeaderFields.put("address", "");
+        pageHeaderFields.put("bill_datebs", "");
+
+        pageHeaderFields.put("contact", "");
+        pageHeaderFields.put("fiscal_year", "");
+
+        pageHeaderFields.put("email", "");
+        pageHeaderFields.put("bill_number", "");
+
+        pageHeaderFields.put("broker_number", 0);
+        pageHeaderFields.put("pan", "");
+
+        clientFields.put("client_name", "");
+        clientFields.put("mobile", "");
+        clientFields.put("tel_number", "");
+
+        detailsFields.put("tranaction_number", "");
+        detailsFields.put("script", "");
+        detailsFields.put("quantity", 0.0);
+        detailsFields.put("rate", 0.0);
+        detailsFields.put("amount", 0.0);
+        detailsFields.put("seb_commission", 0.0);
+        detailsFields.put("commission_rate", 0.0);
+        detailsFields.put("commission_amount", 0.0);
+        detailsFields.put("capital_gain_tax", 0.0);
+        detailsFields.put("effective_rate", 0.0);
+        detailsFields.put("total", 0.0);
+        detailsFields.put("closeout_quantity", 0);
+        detailsFields.put("closeout_amount", 0.0);
+
+        summaryFields.put("dp_fee", 0.0);
+        summaryFields.put("transaction_date", "");
+        summaryFields.put("clearnace_date", "");
+        summaryFields.put("signature", "");
 
     }
 
-    
 }

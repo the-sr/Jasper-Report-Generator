@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import jasper_report.model.Data;
 
 @Repository
-public interface DataRepo extends JpaRepository<Data,Long>{
+public interface DataRepo extends JpaRepository<Data, Long> {
 
 }
