@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Service
 public class ReportService {
 
-    @Scheduled(cron = "*/20 * * * * *")
+    @Scheduled(cron = "*/5 * * * * *")
     public void generateReport() throws JRException, ClassNotFoundException, SQLException {
 
         JasperDesign jasperDesign = reportDesign();
@@ -195,22 +195,20 @@ public class ReportService {
         JRDesignBand band = new JRDesignBand();
         band.setHeight(20);
 
-        JRDesignRectangle rectangle = new JRDesignRectangle();
-        rectangle.setX(0);
-        rectangle.setY(0);
-        rectangle.setWidth(1040);
-        rectangle.setHeight(20);
-        rectangle.setBackcolor(Color.BLACK);
-        rectangle.setMode(ModeEnum.OPAQUE);
-        band.addElement(rectangle);
-
-        band.addElement(designLine(0, 0, 1040, 0));
-
         XmlDto dto = new XmlDto();
         Map<String, Object> fieldsMap = dto.getDetailsFields();
         Set<String> fieldsSet = fieldsMap.keySet();
         AtomicInteger x = new AtomicInteger(0);
         fieldsSet.forEach(f -> {
+
+            JRDesignRectangle rectangle = new JRDesignRectangle();
+            rectangle.setX(x.get());
+            rectangle.setY(0);
+            rectangle.setWidth(80);
+            rectangle.setHeight(20);
+            rectangle.setBackcolor(Color.BLACK);
+            rectangle.setMode(ModeEnum.OPAQUE);
+            band.addElement(rectangle);
 
             JRDesignStaticText text = new JRDesignStaticText();
             text.setText(f);
@@ -225,11 +223,8 @@ public class ReportService {
             text.setMode(ModeEnum.OPAQUE);
             band.addElement(text);
 
-            band.addElement(designLine(x.get(), 0, 0, 20));
-
             x.getAndAdd(80);
         });
-        band.addElement(designLine(x.get(), 0, 0, 20));
         return band;
     }
 
@@ -241,8 +236,6 @@ public class ReportService {
         XmlDto dto = new XmlDto();
         Map<String, Object> fieldsMap = dto.getDetailsFields();
         Set<String> fieldsSet = fieldsMap.keySet();
-
-        band.addElement(designLine(0, 0, 1040, 0));
 
         AtomicInteger x = new AtomicInteger();
         fieldsSet.forEach(f -> {
@@ -269,13 +262,12 @@ public class ReportService {
             band.addElement(textField);
 
             band.addElement(designLine(x.get(), 0, 0, 20));
+            band.addElement(designLine(x.get(), 19, 80, 0));
 
             x.getAndAdd(80);
             band.addElement(designLine(x.get(), 0, 0, 20));
 
         });
-        band.addElement(designLine(0, 19, 1040, 0));
-
         return band;
     }
 
