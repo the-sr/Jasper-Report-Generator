@@ -1,5 +1,6 @@
 package jasper_report.services;
 
+import jasper_report.dto.BillReportDto;
 import jasper_report.dto.XmlDto;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.design.*;
@@ -27,26 +28,26 @@ public class ReportService {
 
         JasperDesign jasperDesign = reportDesign();
 
-        XmlDto dto = new XmlDto();
+        BillReportDto dto = new BillReportDto();
         JRDesignQuery query = new JRDesignQuery();
         query.setText(dto.getQuery());
         jasperDesign.setQuery(query);
 
         // --------------------------------BANDS-------------------------------
 
-        JRDesignBand titleBand = titleBand(jasperDesign);
-        jasperDesign.setTitle(titleBand);
+        // JRDesignBand titleBand = titleBand(jasperDesign);
+        // jasperDesign.setTitle(titleBand);
 
-        JRDesignBand headerBand = headerBand(jasperDesign);
+        JRDesignBand headerBand = headerBand(jasperDesign,dto);
         jasperDesign.setPageHeader(headerBand);
 
-        JRDesignBand columnHeaderBand = columnHeaderBand(jasperDesign);
+        JRDesignBand columnHeaderBand = columnHeaderBand(jasperDesign,dto);
         jasperDesign.setColumnHeader(columnHeaderBand);
 
-        JRDesignBand detailBand = detailBand(jasperDesign);
+        JRDesignBand detailBand = detailBand(jasperDesign,dto);
         ((JRDesignSection) jasperDesign.getDetailSection()).addBand(detailBand);
 
-        JRDesignBand summaryBand = summaryBand(jasperDesign);
+        JRDesignBand summaryBand = summaryBand(jasperDesign,dto);
         jasperDesign.setSummary(summaryBand);
 
         // _____REPORT_GENERATION_________
@@ -78,7 +79,7 @@ public class ReportService {
         return titleBand;
     }
 
-    private JRDesignBand headerBand(JasperDesign design) {
+    private JRDesignBand headerBand(JasperDesign design,XmlDto dto) {
 
         JRDesignBand band = new JRDesignBand();
         band.setHeight(205);
@@ -94,8 +95,6 @@ public class ReportService {
         JRDesignStaticText title3 = staticText(0, 40, design.getPageWidth(), 20);
         title3.setText("TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE");
         band.addElement(title3);
-
-        XmlDto dto = new XmlDto();
 
         Map<String, Object> fieldsMap = dto.getPageHeaderFields();
         Set<String> fieldsSet = fieldsMap.keySet();
@@ -198,11 +197,10 @@ public class ReportService {
         return band;
     }
 
-    private JRDesignBand columnHeaderBand(JasperDesign design) {
+    private JRDesignBand columnHeaderBand(JasperDesign design, XmlDto dto) {
         JRDesignBand band = new JRDesignBand();
         band.setHeight(20);
 
-        XmlDto dto = new XmlDto();
         Map<String, Object> fieldsMap = dto.getDetailsFields();
         Set<String> fieldsSet = fieldsMap.keySet();
         int width = design.getColumnWidth() / fieldsSet.size();
@@ -211,7 +209,7 @@ public class ReportService {
 
             JRDesignStaticText text = new JRDesignStaticText();
             text.setText(f);
-            text.setX(x.get() + 1);
+            text.setX(x.get());
             text.setY(0);
             text.setWidth(width - 1);
             text.setHeight(20);
@@ -230,12 +228,11 @@ public class ReportService {
         return band;
     }
 
-    private JRDesignBand detailBand(JasperDesign design) {
+    private JRDesignBand detailBand(JasperDesign design,XmlDto dto) {
 
         JRDesignBand band = new JRDesignBand();
         band.setHeight(20);
 
-        XmlDto dto = new XmlDto();
         Map<String, Object> fieldsMap = dto.getDetailsFields();
         Set<String> fieldsSet = fieldsMap.keySet();
         int width = design.getColumnWidth() / fieldsSet.size();
@@ -275,12 +272,11 @@ public class ReportService {
         return band;
     }
 
-    private JRDesignBand summaryBand(JasperDesign design) {
+    private JRDesignBand summaryBand(JasperDesign design,XmlDto dto) {
 
         JRDesignBand band = new JRDesignBand();
         band.setHeight(20);
 
-        XmlDto dto = new XmlDto();
         int width = design.getColumnWidth() / dto.getDetailsFields().keySet().size();
 
         JRDesignStaticText text = new JRDesignStaticText();
