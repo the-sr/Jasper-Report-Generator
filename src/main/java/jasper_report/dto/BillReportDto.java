@@ -7,55 +7,88 @@ public class BillReportDto extends XmlDto{
 
         super();
 
-        query = "select * from data";
+        query = "SELECT \n" + //
+                        "    company_name AS \"Company Name\",\n" + //
+                        "    address AS \"Address\",\n" + //
+                        "    contact AS \"Contact\",\n" + //
+                        "    email AS \"Email\",\n" + //
+                        "    broker_number AS \"Broker Number\",\n" + //
+                        "    pan AS \"PAN\",\n" + //
+                        "    bill_datead AS \"Bill Date (AD)\",\n" + //
+                        "    bill_datebs AS \"Bill Date (BS)\",\n" + //
+                        "    fiscal_year AS \"Fiscal Year\",\n" + //
+                        "    bill_number AS \"Bill Number\",\n" + //
+                        "    client_name AS \"Client Name\",\n" + //
+                        "    mobile AS \"Mobile\",\n" + //
+                        "    tel_number AS \"Telephone Number\",\n" + //
+                        "    tranaction_number AS \"Transaction Number\",\n" + //
+                        "    script AS \"Script\",\n" + //
+                        "    quantity AS \"Quantity\",\n" + //
+                        "    rate AS \"Rate\",\n" + //
+                        "    amount AS \"Amount\",\n" + //
+                        "    seb_commission AS \"SEB Commission\",\n" + //
+                        "    commission_rate AS \"Commission Rate\",\n" + //
+                        "    commission_amount AS \"Commission Amount\",\n" + //
+                        "    capital_gain_tax AS \"Capital Gain Tax\",\n" + //
+                        "    effective_rate AS \"Effective Rate\",\n" + //
+                        "    total AS \"Total\",\n" + //
+                        "    closeout_quantity AS \"Closeout Quantity\",\n" + //
+                        "    closeout_amount AS \"Closeout Amount\",\n" + //
+                        "    dp_fee AS \"DP Fee\",\n" + //
+                        "    transaction_date AS \"Transaction Date\",\n" + //
+                        "    clearnace_date AS \"Clearance Date\",\n" + //
+                        "    signature AS \"Signature\"\n" + //
+                        "FROM data;\n" + //
+                        "";
+    
 
-        pageHeaderFields.put("company_name", "");
-        pageHeaderFields.put("bill_datead", "");
+        pageHeaderFields.put("Company Name", "");
+        pageHeaderFields.put("Bill Date (AD)", "");
 
-        pageHeaderFields.put("address", "");
-        pageHeaderFields.put("bill_datebs", "");
+        pageHeaderFields.put("Address", "");
+        pageHeaderFields.put("Bill Date (BS)", "");
 
-        pageHeaderFields.put("contact", "");
-        pageHeaderFields.put("fiscal_year", "");
+        pageHeaderFields.put("Contact", "");
+        pageHeaderFields.put("Fiscal Year", "");
 
-        pageHeaderFields.put("email", "");
-        pageHeaderFields.put("bill_number", "");
+        pageHeaderFields.put("Email", "");
+        pageHeaderFields.put("Bill Number", "");
 
-        pageHeaderFields.put("broker_number", 0);
-        pageHeaderFields.put("pan", "");
+        pageHeaderFields.put("Broker Number", 0);
+        pageHeaderFields.put("PAN", "");
 
-        clientFields.put("client_name", "");
-        clientFields.put("mobile", "");
-        clientFields.put("tel_number", "");
+        clientFields.put("Client Name", "");
+        clientFields.put("Mobile", "");
+        clientFields.put("Telephone Number", "");
 
-        detailsFields.put("tranaction_number", "");
-        detailsFields.put("script", "");
-        detailsFields.put("quantity", 0.0);
-        detailsFields.put("rate", 0.0);
-        detailsFields.put("amount", 0.0);
-        detailsFields.put("seb_commission", 0.0);
-        detailsFields.put("commission_rate", 0.0);
-        detailsFields.put("commission_amount", 0.0);
-        detailsFields.put("capital_gain_tax", 0.0);
-        detailsFields.put("effective_rate", 0.0);
-        detailsFields.put("total", 0.0);
-        detailsFields.put("closeout_quantity", 0);
-        detailsFields.put("closeout_amount", 0.0);
+        detailsFields.put("Transaction Number", "");
+        detailsFields.put("Script", "");
+        detailsFields.put("Quantity", 0.0);
+        detailsFields.put("Rate", 0.0);
+        detailsFields.put("Amount", 0.0);
+        detailsFields.put("Seb Commission", 0.0);
+        detailsFields.put("Commission Rate", 0.0);
+        detailsFields.put("Commission Amount", 0.0);
+        detailsFields.put("Capital Gain Tax", 0.0);
+        detailsFields.put("Effective Rate", 0.0);
+        detailsFields.put("Total", 0.0);
+        detailsFields.put("Closeout Quantity", 0);
+        detailsFields.put("Closeout Amount", 0.0);
 
-        summaryFields.put("dp_fee", 0.0);
-        summaryFields.put("transaction_date", "");
-        summaryFields.put("clearnace_date", "");
-        summaryFields.put("signature", "");
+        summaryFields.put("DP Fee", 0.0);
+        summaryFields.put("Transaction Date", "");
+        summaryFields.put("Clearnace Date", "");
+        summaryFields.put("Signature", "");
 
-        expression.put("quantity", "sum");
-        expression.put("rate", "sum");
-        expression.put("amount", "sum");
-        expression.put("seb_commission", "sum");
-        expression.put("commission_rate", "sum");
-        expression.put("commission_amount", "sum");
-        expression.put("capital_gain_tax", "sum");
-        expression.put("effective_rate", "sum");
-        expression.put("total", "sum");
+        expression.put("Quantity", "sum");
+        expression.put("Rate", "sum");
+        expression.put("Amount", "sum");
+        expression.put("Seb Commission", "sum");
+        expression.put("Commission Rate", "sum");
+        expression.put("Commission Amount", "sum");
+        expression.put("Capital Gain Tax", "sum");
+        expression.put("Effective Rate", "sum");
+        expression.put("Total", "sum");
 
     }
 
