@@ -4,10 +4,12 @@ import jasper_report.dto.XmlDto;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.design.*;
 import net.sf.jasperreports.engine.type.HorizontalTextAlignEnum;
+import net.sf.jasperreports.engine.type.ModeEnum;
 import net.sf.jasperreports.engine.type.VerticalTextAlignEnum;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.awt.Color;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -43,8 +45,8 @@ public class ReportService {
         JRDesignBand detailBand = detailBand(jasperDesign);
         ((JRDesignSection) jasperDesign.getDetailSection()).addBand(detailBand);
 
-        // JRDesignBand columnFooterBand=columnFooterBand(jasperDesign);
-        // jasperDesign.setColumnFooter(columnFooterBand);
+        JRDesignBand summaryBand=summaryBand(jasperDesign);
+        jasperDesign.setSummary(summaryBand);
 
         // _____REPORT_GENERATION_________
         JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
@@ -191,6 +193,15 @@ public class ReportService {
     private JRDesignBand columnHeaderBand(JasperDesign design) {
         JRDesignBand band = new JRDesignBand();
         band.setHeight(20);
+        
+        JRDesignRectangle rectangle=new JRDesignRectangle();
+        rectangle.setX(0);
+        rectangle.setY(0);
+        rectangle.setWidth(1040);
+        rectangle.setHeight(20);
+        rectangle.setBackcolor(Color.BLACK);
+        rectangle.setMode(ModeEnum.OPAQUE);
+        band.addElement(rectangle);
 
         band.addElement(designLine(0, 0, 1040, 0));
 
@@ -199,6 +210,7 @@ public class ReportService {
         Set<String> fieldsSet = fieldsMap.keySet();
         AtomicInteger x = new AtomicInteger(0);
         fieldsSet.forEach(f -> {
+
             JRDesignStaticText text = new JRDesignStaticText();
             text.setText(f);
             text.setX(x.get());
@@ -206,6 +218,10 @@ public class ReportService {
             text.setWidth(80);
             text.setHeight(20);
             text.setHorizontalTextAlign(HorizontalTextAlignEnum.CENTER);
+            text.setVerticalTextAlign(VerticalTextAlignEnum.MIDDLE);
+            text.setForecolor(Color.WHITE);
+            text.setBackcolor(Color.BLACK);
+            text.setMode(ModeEnum.OPAQUE);
             band.addElement(text);
 
             band.addElement(designLine(x.get(), 0, 0, 20));
@@ -262,7 +278,7 @@ public class ReportService {
         return band;
     }
 
-    private JRDesignBand columnFooterBand(JasperDesign design) {
+    private JRDesignBand summaryBand(JasperDesign design) {
 
         JRDesignBand band = new JRDesignBand();
         band.setHeight(20);
