@@ -64,8 +64,10 @@ public class ReportService {
         JasperDesign jasperDesign = new JasperDesign();
         jasperDesign.setName("Report");
         jasperDesign.setPageHeight(595);
-        jasperDesign.setPageWidth(1100);
-        jasperDesign.setColumnWidth(1040);
+        jasperDesign.setPageWidth(1200);
+        jasperDesign.setColumnWidth(1150);
+        jasperDesign.setLeftMargin(25);
+        jasperDesign.setRightMargin(25);
         return jasperDesign;
     }
 
@@ -79,17 +81,17 @@ public class ReportService {
     private JRDesignBand headerBand(JasperDesign design) {
 
         JRDesignBand band = new JRDesignBand();
-        band.setHeight(200);
+        band.setHeight(205);
 
-        JRDesignStaticText title1 = staticText(0, 0, 1040, 20);
+        JRDesignStaticText title1 = staticText(0, 0, design.getPageWidth(), 20);
         title1.setText("TITLE");
         band.addElement(title1);
 
-        JRDesignStaticText title2 = staticText(0, 20, 1040, 20);
+        JRDesignStaticText title2 = staticText(0, 20, design.getPageWidth(), 20);
         title2.setText("TITLE TITLE TITLE TITLE TITLE");
         band.addElement(title2);
 
-        JRDesignStaticText title3 = staticText(0, 40, 1040, 20);
+        JRDesignStaticText title3 = staticText(0, 40, design.getPageWidth(), 20);
         title3.setText("TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE");
         band.addElement(title3);
 
@@ -117,6 +119,7 @@ public class ReportService {
                 text.setY(y.get());
                 text.setWidth(80);
                 text.setHeight(20);
+                text.setFontSize(12f);
                 band.addElement(text);
                 x.getAndAdd(80);
             }
@@ -129,7 +132,8 @@ public class ReportService {
                 textField.setX(x.get());
                 textField.setY(y.get());
                 textField.setHeight(20);
-                textField.setWidth(500);
+                textField.setWidth(design.getColumnWidth() / 2);
+                textField.setFontSize(12f);
                 textField.setHorizontalTextAlign(HorizontalTextAlignEnum.LEFT);
                 band.addElement(textField);
                 x.getAndAdd(500);
@@ -143,7 +147,8 @@ public class ReportService {
                 textField.setX(x.get());
                 textField.setY(y.get());
                 textField.setHeight(20);
-                textField.setWidth(500);
+                textField.setWidth(design.getColumnWidth() / 2);
+                textField.setFontSize(12f);
                 textField.setHorizontalTextAlign(HorizontalTextAlignEnum.RIGHT);
                 band.addElement(textField);
 
@@ -154,7 +159,7 @@ public class ReportService {
 
         });
 
-        band.addElement(designLine(x.get(), y.get(), 1040, 0));
+        band.addElement(designLine(0, y.get(), design.getColumnWidth(), 0, Color.BLACK));
 
         y.set(y.getAndAdd(10));
 
@@ -179,15 +184,17 @@ public class ReportService {
             textField.setY(y.get());
             textField.setWidth(80);
             textField.setHeight(20);
+            textField.setFontSize(12f);
             band.addElement(textField);
             x.getAndAdd(80);
         });
 
         JRDesignStaticText text = staticText(0, 180, 1040, 20);
-        text.setText("As per your order, we have Sold these udernoted stocks");
+        text.setText("As per your order, we have sold these udernoted stocks");
         text.setHorizontalTextAlign(HorizontalTextAlignEnum.LEFT);
         band.addElement(text);
 
+        band.addElement(designLine(0, 200, design.getColumnWidth(), 1, Color.BLACK));
         return band;
     }
 
@@ -198,24 +205,17 @@ public class ReportService {
         XmlDto dto = new XmlDto();
         Map<String, Object> fieldsMap = dto.getDetailsFields();
         Set<String> fieldsSet = fieldsMap.keySet();
+        int width = design.getColumnWidth() / fieldsSet.size();
         AtomicInteger x = new AtomicInteger(0);
         fieldsSet.forEach(f -> {
 
-            JRDesignRectangle rectangle = new JRDesignRectangle();
-            rectangle.setX(x.get());
-            rectangle.setY(0);
-            rectangle.setWidth(80);
-            rectangle.setHeight(20);
-            rectangle.setBackcolor(Color.BLACK);
-            rectangle.setMode(ModeEnum.OPAQUE);
-            band.addElement(rectangle);
-
             JRDesignStaticText text = new JRDesignStaticText();
             text.setText(f);
-            text.setX(x.get());
+            text.setX(x.get() + 1);
             text.setY(0);
-            text.setWidth(80);
+            text.setWidth(width - 1);
             text.setHeight(20);
+            text.setFontSize(12f);
             text.setHorizontalTextAlign(HorizontalTextAlignEnum.CENTER);
             text.setVerticalTextAlign(VerticalTextAlignEnum.MIDDLE);
             text.setForecolor(Color.WHITE);
@@ -223,7 +223,9 @@ public class ReportService {
             text.setMode(ModeEnum.OPAQUE);
             band.addElement(text);
 
-            x.getAndAdd(80);
+            x.getAndAdd(width);
+
+            band.addElement(designLine(x.get(), 0, 0, 20, Color.WHITE));
         });
         return band;
     }
@@ -236,6 +238,7 @@ public class ReportService {
         XmlDto dto = new XmlDto();
         Map<String, Object> fieldsMap = dto.getDetailsFields();
         Set<String> fieldsSet = fieldsMap.keySet();
+        int width = design.getColumnWidth() / fieldsSet.size();
 
         AtomicInteger x = new AtomicInteger();
         fieldsSet.forEach(f -> {
@@ -255,17 +258,18 @@ public class ReportService {
             textField.setExpression(expression);
             textField.setX(x.get());
             textField.setY(0);
-            textField.setWidth(80);
+            textField.setWidth(width);
             textField.setHeight(20);
+            textField.setFontSize(12f);
             textField.setHorizontalTextAlign(HorizontalTextAlignEnum.CENTER);
             textField.setVerticalTextAlign(VerticalTextAlignEnum.MIDDLE);
             band.addElement(textField);
 
-            band.addElement(designLine(x.get(), 0, 0, 20));
-            band.addElement(designLine(x.get(), 19, 80, 0));
+            band.addElement(designLine(x.get(), 0, 0, 20, Color.black));
+            band.addElement(designLine(x.get(), 19, width, 0, Color.black));
 
-            x.getAndAdd(80);
-            band.addElement(designLine(x.get(), 0, 0, 20));
+            x.getAndAdd(width);
+            band.addElement(designLine(x.get(), 0, 0, 20, Color.black));
 
         });
         return band;
@@ -274,23 +278,18 @@ public class ReportService {
     private JRDesignBand summaryBand(JasperDesign design) {
 
         JRDesignBand band = new JRDesignBand();
-        band.setHeight(30);
+        band.setHeight(20);
 
-        JRDesignRectangle rectangle = new JRDesignRectangle();
-        rectangle.setX(80);
-        rectangle.setY(0);
-        rectangle.setWidth(800);
-        rectangle.setHeight(20);
-        rectangle.setBackcolor(Color.BLACK);
-        rectangle.setMode(ModeEnum.OPAQUE);
-        band.addElement(rectangle);
+        XmlDto dto = new XmlDto();
+        int width = design.getColumnWidth() / dto.getDetailsFields().keySet().size();
 
         JRDesignStaticText text = new JRDesignStaticText();
         text.setText("Total");
-        text.setX(80);
+        text.setX(width);
         text.setY(0);
-        text.setWidth(80);
+        text.setWidth(width - 1);
         text.setHeight(20);
+        text.setFontSize(12f);
         text.setHorizontalTextAlign(HorizontalTextAlignEnum.CENTER);
         text.setVerticalTextAlign(VerticalTextAlignEnum.MIDDLE);
         text.setForecolor(Color.WHITE);
@@ -298,12 +297,12 @@ public class ReportService {
         text.setMode(ModeEnum.OPAQUE);
         band.addElement(text);
 
-        // variables
-        XmlDto dto = new XmlDto();
         Map<String, String> operationMap = dto.getExpression();
         Set<String> operation = operationMap.keySet();
-        AtomicInteger x = new AtomicInteger(160);
+        AtomicInteger x = new AtomicInteger(width * 2);
         operation.forEach(o -> {
+
+            // variables
             JRDesignVariable variable = new JRDesignVariable();
             variable.setName("total" + o);
             variable.setValueClass(Double.class);
@@ -322,8 +321,9 @@ public class ReportService {
             JRDesignTextField textField = new JRDesignTextField();
             textField.setX(x.get());
             textField.setY(0);
-            textField.setWidth(80);
+            textField.setWidth(width - 1);
             textField.setHeight(20);
+            textField.setFontSize(12f);
             textField.setHorizontalTextAlign(HorizontalTextAlignEnum.CENTER);
             textField.setVerticalTextAlign(VerticalTextAlignEnum.MIDDLE);
             textField.setForecolor(Color.WHITE);
@@ -334,19 +334,20 @@ public class ReportService {
             exp.setText("$V{total" + o + "}");
             textField.setExpression(exp);
             band.addElement(textField);
-            x.getAndAdd(80);
+            x.getAndAdd(width);
         });
 
         return band;
 
     }
 
-    private JRDesignLine designLine(int x, int y, int width, int height) {
+    private JRDesignLine designLine(int x, int y, int width, int height, Color color) {
         JRDesignLine line = new JRDesignLine();
         line.setX(x);
         line.setY(y);
         line.setWidth(width);
         line.setHeight(height);
+        line.setForecolor(color);
         return line;
     }
 

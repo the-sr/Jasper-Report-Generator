@@ -42,11 +42,11 @@ public class XmlDto {
         detailsFields.put("quantity", 0.0);
         detailsFields.put("rate", 0.0);
         detailsFields.put("amount", 0.0);
-        detailsFields.put("seb_commission", 0.0);
-        detailsFields.put("commission_rate", 0.0);
-        detailsFields.put("commission_amount", 0.0);
-        detailsFields.put("capital_gain_tax", 0.0);
-        detailsFields.put("effective_rate", 0.0);
+        // detailsFields.put("seb_commission", 0.0);
+        // detailsFields.put("commission_rate", 0.0);
+        // detailsFields.put("commission_amount", 0.0);
+        // detailsFields.put("capital_gain_tax", 0.0);
+        // detailsFields.put("effective_rate", 0.0);
         detailsFields.put("total", 0.0);
         detailsFields.put("closeout_quantity", 0);
         detailsFields.put("closeout_amount", 0.0);
@@ -59,11 +59,11 @@ public class XmlDto {
         expression.put("quantity", "sum");
         expression.put("rate", "sum");
         expression.put("amount", "sum");
-        expression.put("seb_commission", "sum");
-        expression.put("commission_rate", "sum");
-        expression.put("commission_amount", "sum");
-        expression.put("capital_gain_tax", "sum");
-        expression.put("effective_rate", "sum");
+        // expression.put("seb_commission", "sum");
+        // expression.put("commission_rate", "sum");
+        // expression.put("commission_amount", "sum");
+        // expression.put("capital_gain_tax", "sum");
+        // expression.put("effective_rate", "sum");
         expression.put("total", "sum");
 
     }
