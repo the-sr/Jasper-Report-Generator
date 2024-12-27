@@ -13,8 +13,10 @@ public class XmlDto {
     private Map<String, Object> detailsFields = new LinkedHashMap<>();
     private Map<String, Object> summaryFields = new LinkedHashMap<>();
 
+    private Map<String, String> expression = new LinkedHashMap<>();
+
     public XmlDto() {
-        this.query = "select * from data where id=1";
+        this.query = "select * from data";
 
         pageHeaderFields.put("company_name", "");
         pageHeaderFields.put("bill_datead", "");
@@ -53,6 +55,16 @@ public class XmlDto {
         summaryFields.put("transaction_date", "");
         summaryFields.put("clearnace_date", "");
         summaryFields.put("signature", "");
+
+        expression.put("quantity", "sum");
+        expression.put("rate", "sum");
+        expression.put("amount", "sum");
+        expression.put("seb_commission", "sum");
+        expression.put("commission_rate", "sum");
+        expression.put("commission_amount", "sum");
+        expression.put("capital_gain_tax", "sum");
+        expression.put("effective_rate", "sum");
+        expression.put("total", "sum");
 
     }
 

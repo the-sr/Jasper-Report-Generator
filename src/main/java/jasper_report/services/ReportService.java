@@ -3,6 +3,7 @@ package jasper_report.services;
 import jasper_report.dto.XmlDto;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.design.*;
+import net.sf.jasperreports.engine.type.CalculationEnum;
 import net.sf.jasperreports.engine.type.HorizontalTextAlignEnum;
 import net.sf.jasperreports.engine.type.ModeEnum;
 import net.sf.jasperreports.engine.type.VerticalTextAlignEnum;
@@ -45,7 +46,7 @@ public class ReportService {
         JRDesignBand detailBand = detailBand(jasperDesign);
         ((JRDesignSection) jasperDesign.getDetailSection()).addBand(detailBand);
 
-        JRDesignBand summaryBand=summaryBand(jasperDesign);
+        JRDesignBand summaryBand = summaryBand(jasperDesign);
         jasperDesign.setSummary(summaryBand);
 
         // _____REPORT_GENERATION_________
@@ -182,7 +183,7 @@ public class ReportService {
             x.getAndAdd(80);
         });
 
-        JRDesignStaticText text=staticText(0, 180  , 1040, 20);
+        JRDesignStaticText text = staticText(0, 180, 1040, 20);
         text.setText("As per your order, we have Sold these udernoted stocks");
         text.setHorizontalTextAlign(HorizontalTextAlignEnum.LEFT);
         band.addElement(text);
@@ -193,8 +194,8 @@ public class ReportService {
     private JRDesignBand columnHeaderBand(JasperDesign design) {
         JRDesignBand band = new JRDesignBand();
         band.setHeight(20);
-        
-        JRDesignRectangle rectangle=new JRDesignRectangle();
+
+        JRDesignRectangle rectangle = new JRDesignRectangle();
         rectangle.setX(0);
         rectangle.setY(0);
         rectangle.setWidth(1040);
@@ -281,7 +282,16 @@ public class ReportService {
     private JRDesignBand summaryBand(JasperDesign design) {
 
         JRDesignBand band = new JRDesignBand();
-        band.setHeight(20);
+        band.setHeight(30);
+
+        JRDesignRectangle rectangle = new JRDesignRectangle();
+        rectangle.setX(80);
+        rectangle.setY(0);
+        rectangle.setWidth(800);
+        rectangle.setHeight(20);
+        rectangle.setBackcolor(Color.BLACK);
+        rectangle.setMode(ModeEnum.OPAQUE);
+        band.addElement(rectangle);
 
         JRDesignStaticText text = new JRDesignStaticText();
         text.setText("Total");
@@ -291,7 +301,49 @@ public class ReportService {
         text.setHeight(20);
         text.setHorizontalTextAlign(HorizontalTextAlignEnum.CENTER);
         text.setVerticalTextAlign(VerticalTextAlignEnum.MIDDLE);
+        text.setForecolor(Color.WHITE);
+        text.setBackcolor(Color.BLACK);
+        text.setMode(ModeEnum.OPAQUE);
         band.addElement(text);
+
+        // variables
+        XmlDto dto = new XmlDto();
+        Map<String, String> operationMap = dto.getExpression();
+        Set<String> operation = operationMap.keySet();
+        AtomicInteger x = new AtomicInteger(160);
+        operation.forEach(o -> {
+            JRDesignVariable variable = new JRDesignVariable();
+            variable.setName("total" + o);
+            variable.setValueClass(Double.class);
+            variable.setCalculation(
+                    operationMap.get(o).toUpperCase().equals("SUM") ? CalculationEnum.SUM : CalculationEnum.SYSTEM);
+
+            JRDesignExpression expression = new JRDesignExpression();
+            expression.setText("$F{" + o + "}");
+            variable.setExpression(expression);
+            try {
+                design.addVariable(variable);
+            } catch (JRException e) {
+                e.printStackTrace();
+            }
+
+            JRDesignTextField textField = new JRDesignTextField();
+            textField.setX(x.get());
+            textField.setY(0);
+            textField.setWidth(80);
+            textField.setHeight(20);
+            textField.setHorizontalTextAlign(HorizontalTextAlignEnum.CENTER);
+            textField.setVerticalTextAlign(VerticalTextAlignEnum.MIDDLE);
+            textField.setForecolor(Color.WHITE);
+            textField.setBackcolor(Color.BLACK);
+            textField.setMode(ModeEnum.OPAQUE);
+
+            JRDesignExpression exp = new JRDesignExpression();
+            exp.setText("$V{total" + o + "}");
+            textField.setExpression(exp);
+            band.addElement(textField);
+            x.getAndAdd(80);
+        });
 
         return band;
 
