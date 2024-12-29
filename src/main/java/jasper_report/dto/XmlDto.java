@@ -8,8 +8,8 @@ import lombok.Getter;
 @Getter
 public class XmlDto {
     public String query;
-    public Map<String, Object> pageHeaderFieldsLeftSide = new LinkedHashMap<>();
-    public Map<String, Object> pageHeaderFieldsRightSide = new LinkedHashMap<>();
+    public Map<String, Object> leftSideHeaderFields = new LinkedHashMap<>();
+    public Map<String, Object> rightSideHeaderFields = new LinkedHashMap<>();
     public Map<String, Object> secondaryHeadersFields = new LinkedHashMap<>();
     public Map<String, Object> detailsFields = new LinkedHashMap<>();
     public Map<String, Object> summaryFields = new LinkedHashMap<>();

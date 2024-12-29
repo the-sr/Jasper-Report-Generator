@@ -40,17 +40,17 @@ public class BillReportDto extends XmlDto {
                 "FROM data;\n" + //
                 "";
 
-        pageHeaderFieldsLeftSide.put("Company Name", "");
-        pageHeaderFieldsLeftSide.put("Address", "");
-        pageHeaderFieldsLeftSide.put("Contact", "");
-        pageHeaderFieldsLeftSide.put("Email", "");
+        leftSideHeaderFields.put("Company Name", "");
+        leftSideHeaderFields.put("Address", "");
+        leftSideHeaderFields.put("Contact", "");
+        leftSideHeaderFields.put("Email", "");
+        leftSideHeaderFields.put("PAN", "");
+        leftSideHeaderFields.put("Broker Number", 0);
 
-        pageHeaderFieldsRightSide.put("Bill Date (AD)", "");
-        pageHeaderFieldsRightSide.put("Bill Date (BS)", "");
-        pageHeaderFieldsRightSide.put("Fiscal Year", "");
-        pageHeaderFieldsRightSide.put("Bill Number", "");
-        pageHeaderFieldsLeftSide.put("Broker Number", 0);
-        pageHeaderFieldsRightSide.put("PAN", "");
+        rightSideHeaderFields.put("Bill Date (AD)", "");
+        rightSideHeaderFields.put("Bill Date (BS)", "");
+        rightSideHeaderFields.put("Fiscal Year", "");
+        rightSideHeaderFields.put("Bill Number", "");
 
         secondaryHeadersFields.put("Client Name", "");
         secondaryHeadersFields.put("Mobile", "");
