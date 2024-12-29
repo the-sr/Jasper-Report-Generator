@@ -1,65 +1,60 @@
 package jasper_report.dto;
 
-public class BillReportDto extends XmlDto{
-
+public class BillReportDto extends XmlDto {
 
     public BillReportDto() {
 
         super();
 
         query = "SELECT \n" + //
-                        "    company_name AS \"Company Name\",\n" + //
-                        "    address AS \"Address\",\n" + //
-                        "    contact AS \"Contact\",\n" + //
-                        "    email AS \"Email\",\n" + //
-                        "    broker_number AS \"Broker Number\",\n" + //
-                        "    pan AS \"PAN\",\n" + //
-                        "    bill_datead AS \"Bill Date (AD)\",\n" + //
-                        "    bill_datebs AS \"Bill Date (BS)\",\n" + //
-                        "    fiscal_year AS \"Fiscal Year\",\n" + //
-                        "    bill_number AS \"Bill Number\",\n" + //
-                        "    client_name AS \"Client Name\",\n" + //
-                        "    mobile AS \"Mobile\",\n" + //
-                        "    tel_number AS \"Telephone Number\",\n" + //
-                        "    tranaction_number AS \"Transaction Number\",\n" + //
-                        "    script AS \"Script\",\n" + //
-                        "    quantity AS \"Quantity\",\n" + //
-                        "    rate AS \"Rate\",\n" + //
-                        "    amount AS \"Amount\",\n" + //
-                        "    seb_commission AS \"SEB Commission\",\n" + //
-                        "    commission_rate AS \"Commission Rate\",\n" + //
-                        "    commission_amount AS \"Commission Amount\",\n" + //
-                        "    capital_gain_tax AS \"Capital Gain Tax\",\n" + //
-                        "    effective_rate AS \"Effective Rate\",\n" + //
-                        "    total AS \"Total\",\n" + //
-                        "    closeout_quantity AS \"Closeout Quantity\",\n" + //
-                        "    closeout_amount AS \"Closeout Amount\",\n" + //
-                        "    dp_fee AS \"DP Fee\",\n" + //
-                        "    transaction_date AS \"Transaction Date\",\n" + //
-                        "    clearnace_date AS \"Clearance Date\",\n" + //
-                        "    signature AS \"Signature\"\n" + //
-                        "FROM data;\n" + //
-                        "";
-    
+                "    company_name AS \"Company Name\",\n" + //
+                "    address AS \"Address\",\n" + //
+                "    contact AS \"Contact\",\n" + //
+                "    email AS \"Email\",\n" + //
+                "    broker_number AS \"Broker Number\",\n" + //
+                "    pan AS \"PAN\",\n" + //
+                "    bill_datead AS \"Bill Date (AD)\",\n" + //
+                "    bill_datebs AS \"Bill Date (BS)\",\n" + //
+                "    fiscal_year AS \"Fiscal Year\",\n" + //
+                "    bill_number AS \"Bill Number\",\n" + //
+                "    client_name AS \"Client Name\",\n" + //
+                "    mobile AS \"Mobile\",\n" + //
+                "    tel_number AS \"Telephone Number\",\n" + //
+                "    tranaction_number AS \"Transaction Number\",\n" + //
+                "    script AS \"Script\",\n" + //
+                "    quantity AS \"Quantity\",\n" + //
+                "    rate AS \"Rate\",\n" + //
+                "    amount AS \"Amount\",\n" + //
+                "    seb_commission AS \"SEB Commission\",\n" + //
+                "    commission_rate AS \"Commission Rate\",\n" + //
+                "    commission_amount AS \"Commission Amount\",\n" + //
+                "    capital_gain_tax AS \"Capital Gain Tax\",\n" + //
+                "    effective_rate AS \"Effective Rate\",\n" + //
+                "    total AS \"Total\",\n" + //
+                "    closeout_quantity AS \"Closeout Quantity\",\n" + //
+                "    closeout_amount AS \"Closeout Amount\",\n" + //
+                "    dp_fee AS \"DP Fee\",\n" + //
+                "    transaction_date AS \"Transaction Date\",\n" + //
+                "    clearnace_date AS \"Clearance Date\",\n" + //
+                "    signature AS \"Signature\"\n" + //
+                "FROM data;\n" + //
+                "";
 
-        pageHeaderFields.put("Company Name", "");
-        pageHeaderFields.put("Bill Date (AD)", "");
+        pageHeaderFieldsLeftSide.put("Company Name", "");
+        pageHeaderFieldsLeftSide.put("Address", "");
+        pageHeaderFieldsLeftSide.put("Contact", "");
+        pageHeaderFieldsLeftSide.put("Email", "");
 
-        pageHeaderFields.put("Address", "");
-        pageHeaderFields.put("Bill Date (BS)", "");
+        pageHeaderFieldsRightSide.put("Bill Date (AD)", "");
+        pageHeaderFieldsRightSide.put("Bill Date (BS)", "");
+        pageHeaderFieldsRightSide.put("Fiscal Year", "");
+        pageHeaderFieldsRightSide.put("Bill Number", "");
+        pageHeaderFieldsLeftSide.put("Broker Number", 0);
+        pageHeaderFieldsRightSide.put("PAN", "");
 
-        pageHeaderFields.put("Contact", "");
-        pageHeaderFields.put("Fiscal Year", "");
-
-        pageHeaderFields.put("Email", "");
-        pageHeaderFields.put("Bill Number", "");
-
-        pageHeaderFields.put("Broker Number", 0);
-        pageHeaderFields.put("PAN", "");
-
-        clientFields.put("Client Name", "");
-        clientFields.put("Mobile", "");
-        clientFields.put("Telephone Number", "");
+        secondaryHeadersFields.put("Client Name", "");
+        secondaryHeadersFields.put("Mobile", "");
+        secondaryHeadersFields.put("Telephone Number", "");
 
         detailsFields.put("Transaction Number", "");
         detailsFields.put("Script", "");
