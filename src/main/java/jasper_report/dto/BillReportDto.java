@@ -40,6 +40,12 @@ public class BillReportDto extends XmlDto {
                 "FROM data;\n" + //
                 "";
 
+        titles.add("TITLE");
+        titles.add("TITLE TITLE TITLE");
+        titles.add("TITLE TITLE TITLE TITLE TITLE");
+
+        secondaryHeaderText = "As per your order, we have sold these under-noted stocks";
+
         leftSideHeaderFields.put("Company Name", "");
         leftSideHeaderFields.put("Address", "");
         leftSideHeaderFields.put("Contact", "");

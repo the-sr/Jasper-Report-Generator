@@ -28,7 +28,13 @@ public class ReportService {
     @Scheduled(cron = "*/5 * * * * *")
     public void generateBillReport() throws JRException, ClassNotFoundException, SQLException {
 
-        JasperDesign jasperDesign = reportDesign();
+        JasperDesign jasperDesign = new JasperDesign();
+        jasperDesign.setName("Report");
+        jasperDesign.setPageHeight(595);
+        jasperDesign.setPageWidth(842);
+        jasperDesign.setColumnWidth(802);
+        jasperDesign.setLeftMargin(20);
+        jasperDesign.setRightMargin(20);
 
         BillReportDto dto = new BillReportDto();
         JRDesignQuery query = new JRDesignQuery();
@@ -37,7 +43,7 @@ public class ReportService {
 
         // --------------------------------BANDS-------------------------------
 
-        JRDesignBand titleBand = titleBand(jasperDesign);
+        JRDesignBand titleBand = titleBand(75, jasperDesign, dto);
         jasperDesign.setTitle(titleBand);
 
         JRDesignBand headerBand = headerBand(180, jasperDesign, dto);
@@ -46,7 +52,7 @@ public class ReportService {
         JRDesignBand columnHeaderBand = columnHeaderBand(40, jasperDesign, dto);
         jasperDesign.setColumnHeader(columnHeaderBand);
 
-        JRDesignBand detailBand = detailBand(20, jasperDesign, dto);
+        JRDesignBand detailBand = detailBand(40, jasperDesign, dto);
         ((JRDesignSection) jasperDesign.getDetailSection()).addBand(detailBand);
 
         JRDesignBand summaryBand = summaryBand(20, jasperDesign, dto);
@@ -64,32 +70,29 @@ public class ReportService {
         System.out.println("Report generated successfully!");
     }
 
-    private JasperDesign reportDesign() {
-        JasperDesign jasperDesign = new JasperDesign();
-        jasperDesign.setName("Report");
-        jasperDesign.setPageHeight(595);
-        jasperDesign.setPageWidth(842);
-        jasperDesign.setColumnWidth(802);
-        jasperDesign.setLeftMargin(20);
-        jasperDesign.setRightMargin(20);
-        return jasperDesign;
-    }
-
-    private JRDesignBand titleBand(JasperDesign design) {
+    private JRDesignBand titleBand(int bandHeight, JasperDesign design, XmlDto dto) {
         JRDesignBand band = new JRDesignBand();
-        band.setHeight(60);
+        band.setHeight(bandHeight);
 
-        JRDesignStaticText title1 = staticText(0, 0, design.getPageWidth(), 20);
-        title1.setText("TITLE");
-        band.addElement(title1);
+        // JRDesignImage logo=new JRDesignImage(design);
+        // logo.setExpression(new JRDesignExpression("$F{logo}"));
+        // logo.setX(0);
+        // logo.setY(0);
+        // logo.setWidth(60);
+        // logo.setHeight(bandHeight);
+        // band.addElement(logo);
 
-        JRDesignStaticText title2 = staticText(0, 20, design.getPageWidth(), 20);
-        title2.setText("TITLE TITLE TITLE TITLE TITLE");
-        band.addElement(title2);
-
-        JRDesignStaticText title3 = staticText(0, 40, design.getPageWidth(), 20);
-        title3.setText("TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE TITLE");
-        band.addElement(title3);
+        AtomicInteger y = new AtomicInteger();
+        if (dto.getTitles() != null && !dto.getTitles().isEmpty()) {
+            dto.getTitles().forEach(title -> {
+                JRDesignStaticText text = staticText(0, y.get(), design.getColumnWidth(), 25);
+                text.setText(title);
+                text.setFontSize(16f);
+                text.setBold(true);
+                band.addElement(text);
+                y.getAndAdd(20);
+            });
+        }
 
         return band;
     }
@@ -97,6 +100,7 @@ public class ReportService {
     private JRDesignBand headerBand(int bandHeight, JasperDesign design, XmlDto dto) {
 
         JRDesignBand band = new JRDesignBand();
+        band.setPrintWhenExpression(new JRDesignExpression("Boolean.valueOf($V{PAGE_NUMBER}==1)"));
         band.setHeight(bandHeight);
 
         Map<String, Object> fieldsMap;
@@ -126,7 +130,6 @@ public class ReportService {
                 textField.setFontSize(12f);
                 textField.setHorizontalTextAlign(HorizontalTextAlignEnum.LEFT);
                 band.addElement(textField);
-
                 y1 += 20;
             }
         }
@@ -193,12 +196,15 @@ public class ReportService {
             y += 20;
         }
 
-        JRDesignStaticText text = staticText(0, y, 1040, 20);
-        text.setText("As per your order, we have sold these under-noted stocks");
-        text.setHorizontalTextAlign(HorizontalTextAlignEnum.LEFT);
-        band.addElement(text);
+        if (dto.getSecondaryHeaderText() != null && !dto.getSecondaryHeaderText().isEmpty()) {
+            JRDesignStaticText text = staticText(0, y, design.getColumnWidth(), 20);
+            text.setText(dto.getSecondaryHeaderText());
+            text.setHorizontalTextAlign(HorizontalTextAlignEnum.CENTER);
+            text.setVerticalTextAlign(VerticalTextAlignEnum.MIDDLE);
+            y += 20;
+            band.addElement(text);
+        }
 
-        y += 20;
         band.addElement(designLine(0, y, design.getColumnWidth(), 1, Color.BLACK));
         y += 5;
 
@@ -220,7 +226,7 @@ public class ReportService {
                 text.setX(x.get());
                 text.setY(0);
                 text.setWidth(width - 1);
-                text.setHeight(40);
+                text.setHeight(bandHeight);
                 text.setFontSize(12f);
                 text.setHorizontalTextAlign(HorizontalTextAlignEnum.CENTER);
                 text.setVerticalTextAlign(VerticalTextAlignEnum.MIDDLE);
@@ -264,18 +270,18 @@ public class ReportService {
                 textField.setX(x.get());
                 textField.setY(0);
                 textField.setWidth(width);
-                textField.setHeight(20);
+                textField.setHeight(bandHeight);
                 textField.setFontSize(12f);
                 textField.setHorizontalTextAlign(HorizontalTextAlignEnum.CENTER);
                 textField.setVerticalTextAlign(VerticalTextAlignEnum.MIDDLE);
                 textField.setStretchType(StretchTypeEnum.CONTAINER_BOTTOM);
                 band.addElement(textField);
 
-                band.addElement(designLine(x.get(), 0, 0, 20, Color.black));
-                band.addElement(designLine(x.get(), 19, width, 0, Color.black));
+                band.addElement(designLine(x.get(), 0, 0, bandHeight, Color.black));
+                band.addElement(designLine(x.get(), bandHeight - 1, width, 0, Color.black));
 
                 x.getAndAdd(width);
-                band.addElement(designLine(x.get(), 0, 0, 20, Color.black));
+                band.addElement(designLine(x.get(), 0, 0, bandHeight, Color.black));
 
             });
         }
@@ -369,5 +375,4 @@ public class ReportService {
         text.setVerticalTextAlign(VerticalTextAlignEnum.MIDDLE);
         return text;
     }
-
 }
