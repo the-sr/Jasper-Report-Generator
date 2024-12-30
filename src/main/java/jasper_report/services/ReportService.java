@@ -7,6 +7,8 @@ import net.sf.jasperreports.engine.type.HorizontalTextAlignEnum;
 import net.sf.jasperreports.engine.type.ModeEnum;
 import net.sf.jasperreports.engine.type.StretchTypeEnum;
 import net.sf.jasperreports.engine.type.VerticalTextAlignEnum;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class ReportService {
+
+    @Value("${spring.datasource.driver-class-name}")
+    private String driver;
+    @Value("${spring.datasource.url}")
+    private String url;
+    @Value("${spring.datasource.username}")
+    private String username;
+    @Value("${spring.datasource.password}")
+    private String password;
 
     @Scheduled(cron = "*/5 * * * * *")
     public void generateBillReport() throws JRException, ClassNotFoundException, SQLException {
@@ -62,8 +73,8 @@ public class ReportService {
 
         JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
         Connection con;
-        Class.forName("org.postgresql.Driver");
-        con = DriverManager.getConnection("jdbc:postgresql://localhost:5432/jasper_demo?user=postgres&password=root");
+        Class.forName(driver);
+        con = DriverManager.getConnection(url + "?user=" + username + "&password=" + password);
         Map<String, Object> parameters = new HashMap<>();
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, con);
         JasperExportManager.exportReportToPdfFile(jasperPrint, "Report.pdf");
