@@ -1,58 +1,59 @@
 package jasper_report.controller;
 
+import java.util.Date;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import jasper_report.model.Data;
-import jasper_report.repository.DataRepo;
+import jasper_report.model.Marks;
+import jasper_report.model.Product;
+import jasper_report.repository.MarksRepo;
+import jasper_report.repository.ProductRepo;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
 public class MainController {
 
-   private final DataRepo dataRepo;
+    private final ProductRepo productRepo;
+    private final MarksRepo marksRepo;
 
-   @PostMapping("/save")
-   public String save(){
-       for(long i=1;i<=10;i++){
-           Data data=Data.builder()
-           .id(i)
-           .companyName("Company Name Pvt Ltd")
-           .address("Opp to someone's house")
-           .contact(null)
-           .email("gmail@email.com")
-           .brokerNumber(10)
-           .pan("98562314")
-           .billDateAD("2024-12-24")
-           .billDateBS("2081-09-09")
-           .fiscalYear("2081/82")
-           .billNumber("KTM-S8182-0026830")
-           .clientName("Client Name")
-           .mobile("9865324174")
-           .telNumber(null)
-           .tranactionNumber("202412240"+i)
-           .script("Script Bank Limited [SBL]")
-           .quantity(100.0+i)
-           .rate(3000.0+i)
-           .amount((100.0+i)*(3000.0+i))
-           .sebCommission(51.56)
-           .commissionRate(0.33)
-           .commissionAmount(1000.0)
-           .capitalGainTax(0.00+i)
-           .effectiveRate(3000.0)
-           .total(10000.0)
-           .closeoutQuantity(0.00)
-           .closeoutAmount(0.00)
-           .DpFee(100.0)
-           .transactionDate("2024-12-24")
-           .clearnaceDate("2024-12-24")
-           .signature("Signature")
-           .build();
+    @PostMapping("/save-product")
+    public String saveProduct() {
 
-           dataRepo.save(data);
-       }
-       return "Users saved";
-   }
-    
+        for (long i = 1; i <= 20; i++) {
+            Product product = Product.builder()
+                    .id(i)
+                    .productName("Product " + i)
+                    .quantity(10)
+                    .rate(i * 50.0f)
+                    .amount(i * 1000.0)
+                    .discountRate(i * 1.0f)
+                    .discountAmount((i * 1.0) * (i * 10))
+                    .finalAmount((i * 1000.0) - (i * 1.0) * (i * 10))
+                    .createdDate(new Date())
+                    .build();
+
+            productRepo.save(product);
+        }
+        return "Products saved";
+    }
+    @PostMapping("/save-marks")
+    public String savemarks() {
+
+        for (long i = 1; i <= 10; i++) {
+            Marks marks = Marks.builder()
+                    .id(i)
+                    .subject("Subject "+i)
+                    .term("Term "+i)
+                    .fullMarks(100f)
+                    .passMarks(50f)
+                    .obtainedMarks(i*10f)
+                    .build();
+
+            marksRepo.save(marks);
+        }
+        return "Marks saved";
+    }
+
 }

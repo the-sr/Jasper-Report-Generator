@@ -3,9 +3,9 @@ package jasper_report.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import jasper_report.model.Data;
+import jasper_report.model.Marks;
 
 @Repository
-public interface DataRepo extends JpaRepository<Data, Long> {
-
+public interface MarksRepo extends JpaRepository<Marks,Long>{
+    
 }

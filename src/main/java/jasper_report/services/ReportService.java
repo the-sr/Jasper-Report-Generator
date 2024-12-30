@@ -12,7 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import jasper_report.dto.BillReportDto;
+import jasper_report.dto.MarksXmlDto;
+import jasper_report.dto.ProductXmlDto;
 import jasper_report.dto.XmlDto;
 
 import java.awt.Color;
@@ -20,8 +21,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -39,7 +38,7 @@ public class ReportService {
     private String password;
 
     @Scheduled(cron = "*/5 * * * * *")
-    public void generateBillReport() throws JRException, ClassNotFoundException, SQLException {
+    public void generateProductReport() throws JRException, ClassNotFoundException, SQLException {
 
         JasperDesign jasperDesign = new JasperDesign();
         jasperDesign.setName("Report");
@@ -49,8 +48,9 @@ public class ReportService {
         jasperDesign.setLeftMargin(20);
         jasperDesign.setRightMargin(20);
 
+        ProductXmlDto dto=new ProductXmlDto();
+
         // query
-        BillReportDto dto = new BillReportDto();
         JRDesignQuery query = new JRDesignQuery();
         query.setText(dto.getQuery());
         jasperDesign.setQuery(query);
@@ -67,19 +67,19 @@ public class ReportService {
 
         // --------------------------------BANDS-------------------------------
 
-        JRDesignBand titleBand = titleBand(75, jasperDesign, dto);
+        JRDesignBand titleBand = titleBand(50, jasperDesign, dto);
         jasperDesign.setTitle(titleBand);
 
-        JRDesignBand headerBand = headerBand(180, jasperDesign, dto);
+        JRDesignBand headerBand = headerBand(50, jasperDesign, dto);
         jasperDesign.setPageHeader(headerBand);
 
-        JRDesignBand columnHeaderBand = columnHeaderBand(40, jasperDesign, dto);
+        JRDesignBand columnHeaderBand = columnHeaderBand(20, jasperDesign, dto);
         jasperDesign.setColumnHeader(columnHeaderBand);
 
-        JRDesignBand detailBand = detailBand(40, jasperDesign, dto);
+        JRDesignBand detailBand = detailBand(20, jasperDesign, dto);
         ((JRDesignSection) jasperDesign.getDetailSection()).addBand(detailBand);
 
-        JRDesignBand summaryBand = summaryBand(200, jasperDesign, dto);
+        JRDesignBand summaryBand = summaryBand(20, jasperDesign, dto);
         jasperDesign.setSummary(summaryBand);
 
         // --------------------------REPORT_GENERATION----------------------------
@@ -90,10 +90,67 @@ public class ReportService {
         con = DriverManager.getConnection(url + "?user=" + username + "&password=" + password);
         Map<String, Object> parameters = new HashMap<>();
         JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, con);
-        JasperExportManager.exportReportToPdfFile(jasperPrint, "Report.pdf");
-        System.out.println("Report generated successfully!");
+        JasperExportManager.exportReportToPdfFile(jasperPrint, "Product Report.pdf");
+        System.out.println("Product Report generated successfully!");
     }
 
+    @Scheduled(cron = "*/5 * * * * *")
+    public void generateMarksReport() throws JRException, ClassNotFoundException, SQLException {
+
+        JasperDesign jasperDesign = new JasperDesign();
+        jasperDesign.setName("Report");
+        jasperDesign.setPageHeight(595);
+        jasperDesign.setPageWidth(842);
+        jasperDesign.setColumnWidth(802);
+        jasperDesign.setLeftMargin(20);
+        jasperDesign.setRightMargin(20);
+
+        MarksXmlDto dto=new MarksXmlDto();
+
+        // query
+        JRDesignQuery query = new JRDesignQuery();
+        query.setText(dto.getQuery());
+        jasperDesign.setQuery(query);
+
+        // fields
+        createFields(jasperDesign, dto.getLeftSideHeaderFields());
+        createFields(jasperDesign, dto.getRightSideHeaderFields());
+        createFields(jasperDesign, dto.getSecondaryHeadersFields());
+        createFields(jasperDesign, dto.getDetailsFields());
+        createFields(jasperDesign, dto.getRightSideSummaryFields());
+
+        // variables
+        createVariables(jasperDesign, dto.getExpression());
+
+        // --------------------------------BANDS-------------------------------
+
+        JRDesignBand titleBand = titleBand(50, jasperDesign, dto);
+        jasperDesign.setTitle(titleBand);
+
+        JRDesignBand headerBand = headerBand(50, jasperDesign, dto);
+        jasperDesign.setPageHeader(headerBand);
+
+        JRDesignBand columnHeaderBand = columnHeaderBand(20, jasperDesign, dto);
+        jasperDesign.setColumnHeader(columnHeaderBand);
+
+        JRDesignBand detailBand = detailBand(20, jasperDesign, dto);
+        ((JRDesignSection) jasperDesign.getDetailSection()).addBand(detailBand);
+
+        JRDesignBand summaryBand = summaryBand(20, jasperDesign, dto);
+        jasperDesign.setSummary(summaryBand);
+
+        // --------------------------REPORT_GENERATION----------------------------
+
+        JasperReport jasperReport = JasperCompileManager.compileReport(jasperDesign);
+        Connection con;
+        Class.forName(driver);
+        con = DriverManager.getConnection(url + "?user=" + username + "&password=" + password);
+        Map<String, Object> parameters = new HashMap<>();
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, con);
+        JasperExportManager.exportReportToPdfFile(jasperPrint, "Marks Report.pdf");
+        System.out.println("Marks Report generated successfully!");
+    }
+    
     private JRDesignBand titleBand(int bandHeight, JasperDesign design, XmlDto dto) {
         JRDesignBand band = new JRDesignBand();
         band.setHeight(bandHeight);
@@ -286,27 +343,17 @@ public class ReportService {
         JRDesignBand band = new JRDesignBand();
         band.setHeight(bandHeight);
 
-        int width = design.getColumnWidth() / dto.getDetailsFields().keySet().size();
+        int width = design.getColumnWidth() / dto.getDetailsFields().size();
 
-        JRDesignStaticText text = new JRDesignStaticText();
-        text.setText("Total");
-        text.setX(width);
-        text.setY(0);
-        text.setWidth(width - 1);
-        text.setHeight(20);
-        text.setFontSize(12f);
-        text.setHorizontalTextAlign(HorizontalTextAlignEnum.CENTER);
-        text.setVerticalTextAlign(VerticalTextAlignEnum.MIDDLE);
-        text.setForecolor(Color.WHITE);
-        text.setBackcolor(Color.BLACK);
-        text.setMode(ModeEnum.OPAQUE);
-        band.addElement(text);
-
+        Set<String> detailsFields=dto.getDetailsFields().keySet();
         Map<String, String> operationMap = dto.getExpression();
-        if (operationMap != null && !operationMap.isEmpty()) {
-            Set<String> operation = operationMap.keySet();
-            AtomicInteger x = new AtomicInteger(width * 2);
-            operation.forEach(o -> {
+        AtomicInteger x = new AtomicInteger(0);
+
+
+        detailsFields.forEach(field-> {
+            JRDesignElement element;
+            if (operationMap != null && operationMap.containsKey(field)) {
+
                 JRDesignTextField textField = new JRDesignTextField();
                 textField.setX(x.get());
                 textField.setY(0);
@@ -318,14 +365,38 @@ public class ReportService {
                 textField.setForecolor(Color.WHITE);
                 textField.setBackcolor(Color.BLACK);
                 textField.setMode(ModeEnum.OPAQUE);
-
+        
                 JRDesignExpression exp = new JRDesignExpression();
-                exp.setText("$V{Total " + o + "}");
+                exp.setText("$V{Total " + field + "}");
                 textField.setExpression(exp);
-                band.addElement(textField);
-                x.getAndAdd(width);
-            });
-        }
+        
+                element=textField;
+            }else{
+                JRDesignRectangle rectangle=new JRDesignRectangle();
+                rectangle.setX(x.get());
+                rectangle.setY(0);
+                rectangle.setWidth(width-1);
+                rectangle.setHeight(20);
+                rectangle.setBackcolor(Color.BLACK);
+                element=rectangle;            
+            }
+            band.addElement(element);
+            x.getAndAdd(width);
+        });
+
+        JRDesignStaticText text = new JRDesignStaticText();
+        text.setText("Total");
+        text.setX(0);
+        text.setY(0);
+        text.setWidth(width - 1);
+        text.setHeight(20);
+        text.setFontSize(12f);
+        text.setHorizontalTextAlign(HorizontalTextAlignEnum.CENTER);
+        text.setVerticalTextAlign(VerticalTextAlignEnum.MIDDLE);
+        text.setForecolor(Color.WHITE);
+        text.setBackcolor(Color.BLACK);
+        text.setMode(ModeEnum.OPAQUE);
+        band.addElement(text);
 
         Map<String, Object> leftSideSummaryFields = dto.getLeftSideSummaryFields();
         if (leftSideSummaryFields != null && !leftSideSummaryFields.isEmpty()) {
