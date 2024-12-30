@@ -60,7 +60,6 @@ public class ReportService {
         createFields(jasperDesign, dto.getRightSideHeaderFields());
         createFields(jasperDesign, dto.getSecondaryHeadersFields());
         createFields(jasperDesign, dto.getDetailsFields());
-        createFields(jasperDesign, dto.getRightSideSummaryFields());
 
         // variables
         createVariables(jasperDesign, dto.getExpression());
@@ -117,7 +116,6 @@ public class ReportService {
         createFields(jasperDesign, dto.getRightSideHeaderFields());
         createFields(jasperDesign, dto.getSecondaryHeadersFields());
         createFields(jasperDesign, dto.getDetailsFields());
-        createFields(jasperDesign, dto.getRightSideSummaryFields());
 
         // variables
         createVariables(jasperDesign, dto.getExpression());
@@ -136,7 +134,7 @@ public class ReportService {
         JRDesignBand detailBand = detailBand(20, jasperDesign, dto);
         ((JRDesignSection) jasperDesign.getDetailSection()).addBand(detailBand);
 
-        JRDesignBand summaryBand = summaryBand(20, jasperDesign, dto);
+        JRDesignBand summaryBand = summaryBand(150, jasperDesign, dto);
         jasperDesign.setSummary(summaryBand);
 
         // --------------------------REPORT_GENERATION----------------------------

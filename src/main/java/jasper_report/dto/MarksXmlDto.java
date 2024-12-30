@@ -20,12 +20,17 @@ public class MarksXmlDto extends XmlDto{
         detailsFields.put("Term","");
         detailsFields.put("Full Marks",0.0f);
         detailsFields.put("Pass Marks",0.0f);
-        detailsFields.put("Obtained marks",0f);
+        detailsFields.put("Obtained Marks",0f);
 
 
         expression.put("Full Marks","sum");
         expression.put("Pass Marks","sum");
-        expression.put("Obtained marks","sum");
+        expression.put("Obtained Marks","sum");
+
+        leftSideSummaryFields.put("Total Full Marks", 0.0);
+        leftSideSummaryFields.put("Total Pass Marks", 0.0);
+        leftSideSummaryFields.put("Total Obtained Marks", 0.0);
+
     }
     
 }
