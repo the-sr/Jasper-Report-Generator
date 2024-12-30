@@ -44,8 +44,6 @@ public class BillReportDto extends XmlDto {
         titles.add("TITLE TITLE TITLE");
         titles.add("TITLE TITLE TITLE TITLE TITLE");
 
-        secondaryHeaderText = "As per your order, we have sold these under-noted stocks";
-
         leftSideHeaderFields.put("Company Name", "");
         leftSideHeaderFields.put("Address", "");
         leftSideHeaderFields.put("Contact", "");
@@ -62,6 +60,8 @@ public class BillReportDto extends XmlDto {
         secondaryHeadersFields.put("Mobile", "");
         secondaryHeadersFields.put("Telephone Number", "");
 
+        secondaryHeaderText = "As per your order, we have sold these under-noted stocks";
+
         detailsFields.put("Transaction Number", "");
         detailsFields.put("Script", "");
         detailsFields.put("Quantity", 0.0);
@@ -76,11 +76,6 @@ public class BillReportDto extends XmlDto {
         detailsFields.put("Closeout Quantity", 0);
         detailsFields.put("Closeout Amount", 0.0);
 
-        summaryFields.put("DP Fee", 0.0);
-        summaryFields.put("Transaction Date", "");
-        summaryFields.put("Clearnace Date", "");
-        summaryFields.put("Signature", "");
-
         expression.put("Quantity", "sum");
         expression.put("Rate", "sum");
         expression.put("Amount", "sum");
@@ -90,6 +85,14 @@ public class BillReportDto extends XmlDto {
         expression.put("Capital Gain Tax", "sum");
         expression.put("Effective Rate", "sum");
         expression.put("Total", "sum");
+
+        leftSideSummaryFields.put("Total Quantity", 0.0);
+        leftSideSummaryFields.put("Total Rate", 0.0);
+        leftSideSummaryFields.put("Total Amount", 0.0);
+
+        rightSideSummaryFields.put("Transaction Date", "");
+        rightSideSummaryFields.put("Clearance Date", "");
+        // rightSideSummaryFields.put("Signature", "");
 
     }
 

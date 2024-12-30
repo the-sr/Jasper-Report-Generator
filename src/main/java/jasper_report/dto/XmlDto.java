@@ -9,13 +9,14 @@ import lombok.Getter;
 
 @Getter
 public class XmlDto {
-    public String query;
+    String query;
     Set<String> titles = new LinkedHashSet<>();
-    public String secondaryHeaderText;
-    public Map<String, Object> leftSideHeaderFields = new LinkedHashMap<>();
-    public Map<String, Object> rightSideHeaderFields = new LinkedHashMap<>();
-    public Map<String, Object> secondaryHeadersFields = new LinkedHashMap<>();
-    public Map<String, Object> detailsFields = new LinkedHashMap<>();
-    public Map<String, Object> summaryFields = new LinkedHashMap<>();
-    public Map<String, String> expression = new LinkedHashMap<>();
+    Map<String, Object> leftSideHeaderFields = new LinkedHashMap<>();
+    Map<String, Object> rightSideHeaderFields = new LinkedHashMap<>();
+    Map<String, Object> secondaryHeadersFields = new LinkedHashMap<>();
+    String secondaryHeaderText;
+    Map<String, Object> detailsFields = new LinkedHashMap<>();
+    Map<String, String> expression = new LinkedHashMap<>();
+    Map<String, Object> leftSideSummaryFields = new LinkedHashMap<>();
+    Map<String, Object> rightSideSummaryFields = new LinkedHashMap<>();
 }

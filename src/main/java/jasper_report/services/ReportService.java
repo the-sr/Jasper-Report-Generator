@@ -20,6 +20,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -47,10 +49,21 @@ public class ReportService {
         jasperDesign.setLeftMargin(20);
         jasperDesign.setRightMargin(20);
 
+        // query
         BillReportDto dto = new BillReportDto();
         JRDesignQuery query = new JRDesignQuery();
         query.setText(dto.getQuery());
         jasperDesign.setQuery(query);
+
+        // fields
+        createFields(jasperDesign, dto.getLeftSideHeaderFields());
+        createFields(jasperDesign, dto.getRightSideHeaderFields());
+        createFields(jasperDesign, dto.getSecondaryHeadersFields());
+        createFields(jasperDesign, dto.getDetailsFields());
+        createFields(jasperDesign, dto.getRightSideSummaryFields());
+
+        // variables
+        createVariables(jasperDesign, dto.getExpression());
 
         // --------------------------------BANDS-------------------------------
 
@@ -66,7 +79,7 @@ public class ReportService {
         JRDesignBand detailBand = detailBand(40, jasperDesign, dto);
         ((JRDesignSection) jasperDesign.getDetailSection()).addBand(detailBand);
 
-        JRDesignBand summaryBand = summaryBand(20, jasperDesign, dto);
+        JRDesignBand summaryBand = summaryBand(200, jasperDesign, dto);
         jasperDesign.setSummary(summaryBand);
 
         // --------------------------REPORT_GENERATION----------------------------
@@ -121,14 +134,6 @@ public class ReportService {
         if (fieldsMap != null && !fieldsMap.isEmpty()) {
             Set<String> fieldsSet = fieldsMap.keySet();
             for (String f : fieldsSet) {
-                JRDesignField field = new JRDesignField();
-                field.setName(f);
-                field.setValueClass(fieldsMap.get(f).getClass());
-                try {
-                    design.addField(field);
-                } catch (JRException e) {
-                    throw new RuntimeException(e);
-                }
                 JRDesignExpression expression = new JRDesignExpression();
                 expression.setText("\"" + f + ": \" + $F{" + f + "}");
 
@@ -149,14 +154,6 @@ public class ReportService {
         if (fieldsMap != null && !fieldsMap.isEmpty()) {
             Set<String> fieldsSet = fieldsMap.keySet();
             for (String f : fieldsSet) {
-                JRDesignField field = new JRDesignField();
-                field.setName(f);
-                field.setValueClass(fieldsMap.get(f).getClass());
-                try {
-                    design.addField(field);
-                } catch (JRException e) {
-                    throw new RuntimeException(e);
-                }
                 JRDesignExpression expression = new JRDesignExpression();
                 expression.setText("\"" + f + ": \" + $F{" + f + "}");
 
@@ -182,14 +179,6 @@ public class ReportService {
             int x = 0;
             Set<String> fieldsSet = fieldsMap.keySet();
             for (String f : fieldsSet) {
-                JRDesignField field = new JRDesignField();
-                field.setName(f);
-                field.setValueClass(fieldsMap.get(f).getClass());
-                try {
-                    design.addField(field);
-                } catch (JRException e) {
-                    throw new RuntimeException(e);
-                }
                 JRDesignExpression expression = new JRDesignExpression();
                 expression.setText("\"" + f + ": \" + $F{" + f + "}");
 
@@ -224,6 +213,7 @@ public class ReportService {
 
     private JRDesignBand columnHeaderBand(int bandHeight, JasperDesign design, XmlDto dto) {
         JRDesignBand band = new JRDesignBand();
+        band.setPrintWhenExpression(new JRDesignExpression("Boolean.valueOf($V{PAGE_NUMBER}==1)"));
         band.setHeight(bandHeight);
 
         Map<String, Object> fieldsMap = dto.getDetailsFields();
@@ -265,14 +255,6 @@ public class ReportService {
 
             AtomicInteger x = new AtomicInteger();
             fieldsSet.forEach(f -> {
-                JRDesignField field = new JRDesignField();
-                field.setName(f);
-                field.setValueClass(fieldsMap.get(f).getClass());
-                try {
-                    design.addField(field);
-                } catch (JRException e) {
-                    throw new RuntimeException(e);
-                }
                 JRDesignExpression expression = new JRDesignExpression();
                 expression.setText("$F{" + f + "}");
 
@@ -325,23 +307,6 @@ public class ReportService {
             Set<String> operation = operationMap.keySet();
             AtomicInteger x = new AtomicInteger(width * 2);
             operation.forEach(o -> {
-
-                // variables
-                JRDesignVariable variable = new JRDesignVariable();
-                variable.setName("total" + o);
-                variable.setValueClass(Double.class);
-                variable.setCalculation(
-                        operationMap.get(o).toUpperCase().equals("SUM") ? CalculationEnum.SUM : CalculationEnum.SYSTEM);
-
-                JRDesignExpression expression = new JRDesignExpression();
-                expression.setText("$F{" + o + "}");
-                variable.setExpression(expression);
-                try {
-                    design.addVariable(variable);
-                } catch (JRException e) {
-                    e.printStackTrace();
-                }
-
                 JRDesignTextField textField = new JRDesignTextField();
                 textField.setX(x.get());
                 textField.setY(0);
@@ -355,13 +320,96 @@ public class ReportService {
                 textField.setMode(ModeEnum.OPAQUE);
 
                 JRDesignExpression exp = new JRDesignExpression();
-                exp.setText("$V{total" + o + "}");
+                exp.setText("$V{Total " + o + "}");
                 textField.setExpression(exp);
                 band.addElement(textField);
                 x.getAndAdd(width);
             });
         }
+
+        Map<String, Object> leftSideSummaryFields = dto.getLeftSideSummaryFields();
+        if (leftSideSummaryFields != null && !leftSideSummaryFields.isEmpty()) {
+            Set<String> fieldsSet = leftSideSummaryFields.keySet();
+            AtomicInteger y = new AtomicInteger(50);
+            fieldsSet.forEach(f -> {
+                JRDesignExpression expression = new JRDesignExpression();
+                expression.setText("\"" + f + ": \" + $V{" + f + "}");
+
+                JRDesignTextField textField = new JRDesignTextField();
+                textField.setExpression(expression);
+                textField.setX(0);
+                textField.setY(y.get());
+                textField.setHeight(20);
+                textField.setWidth(design.getColumnWidth() / 2);
+                textField.setFontSize(12f);
+                textField.setHorizontalTextAlign(HorizontalTextAlignEnum.LEFT);
+                band.addElement(textField);
+                y.getAndAdd(20);
+            });
+        }
+
+        Map<String, Object> rightSideSummaryFields = dto.getRightSideSummaryFields();
+        if (rightSideSummaryFields != null && !rightSideSummaryFields.isEmpty()) {
+            Set<String> fieldsSet = rightSideSummaryFields.keySet();
+            AtomicInteger y = new AtomicInteger(50);
+            fieldsSet.forEach(f -> {
+                JRDesignExpression expression = new JRDesignExpression();
+                expression.setText("\"" + f + ": \" + $F{" + f + "}");
+
+                JRDesignTextField textField = new JRDesignTextField();
+                textField.setExpression(expression);
+                textField.setX(0);
+                textField.setY(y.get());
+                textField.setHeight(20);
+                textField.setWidth(design.getColumnWidth() / 2);
+                textField.setFontSize(12f);
+                textField.setHorizontalTextAlign(HorizontalTextAlignEnum.RIGHT);
+                band.addElement(textField);
+                y.getAndAdd(20);
+            });
+        }
+
         return band;
+
+    }
+
+    private void createFields(JasperDesign design, Map<String, Object> fieldsMap) {
+        if (fieldsMap != null && !fieldsMap.isEmpty()) {
+            Set<String> fieldSet = fieldsMap.keySet();
+            fieldSet.forEach(f -> {
+                JRDesignField field = new JRDesignField();
+                field.setName(f);
+                field.setValueClass(fieldsMap.get(f).getClass());
+                try {
+                    design.addField(field);
+                } catch (JRException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+    }
+
+    private void createVariables(JasperDesign design, Map<String, String> variablesMap) {
+        if (variablesMap != null && !variablesMap.isEmpty()) {
+            Set<String> variablesSet = variablesMap.keySet();
+            variablesSet.forEach(v -> {
+
+                JRDesignVariable variable = new JRDesignVariable();
+                variable.setName("Total " + v);
+                variable.setValueClass(Double.class);
+                variable.setCalculation(
+                        variablesMap.get(v).toUpperCase().equals("SUM") ? CalculationEnum.SUM : CalculationEnum.SYSTEM);
+
+                JRDesignExpression expression = new JRDesignExpression();
+                expression.setText("$F{" + v + "}");
+                variable.setExpression(expression);
+                try {
+                    design.addVariable(variable);
+                } catch (JRException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
     }
 
     private JRDesignLine designLine(int x, int y, int width, int height, Color color) {
